@@ -9,8 +9,10 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic 
-    fluidPage(
-      h1("VisualizadorFallasET")
+    navbarPage("EPE",
+      mod_visual_ui("visual_ui_1"),
+      mod_eventos_ui("eventos_ui_1")
+
     )
   )
 }

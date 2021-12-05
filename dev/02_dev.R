@@ -15,17 +15,25 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
-usethis::use_package( "thinkr" )
+usethis::use_package( "RSQLite" )
+usethis::use_package( "DBI" )
+usethis::use_package( "shinyTime" )
+usethis::use_package( "dplyr" )
+usethis::use_package( "shinyalert" )
+usethis::use_package( "ggplot2" )
+usethis::use_package( "ggthemes" )
+usethis::use_package( "scales" )
+
 
 ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module( name = "name_of_module1" ) # Name of the module
-golem::add_module( name = "name_of_module2" ) # Name of the module
+golem::add_module( name = "visual" ) # Name of the module
+golem::add_module( name = "eventos" ) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
-golem::add_fct( "helpers" ) 
-golem::add_utils( "helpers" )
+golem::add_fct( "grafico_fallas" ) 
+golem::add_utils( "helpers" ) 
 
 ## External resources
 ## Creates .js and .css files at inst/app/www

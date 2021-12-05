@@ -1,0 +1,129 @@
+---
+lang: es-ES
+title: "Informe de Fallas en MT y AT"
+author: "Empresa Provincial de la Energía de Santa Fe"
+date: "`r format(Sys.time(), '%d de %B de %Y')`"
+output: 
+  pdf_document:
+    toc: true
+    number_sections: true
+params:
+  n: NA
+  top: NA
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r inicial, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(scales)
+library(RSQLite)
+source("fct_grafico_fallas.R")
+
+f_ini = as.character(params$n[1]) #"2020-08-01"
+f_fin = as.character(params$n[2]) #"2020-09-30"
+top = params$top
+
+#Conecta con base de datos.
+conn <- dbConnect(RSQLite::SQLite(), gsub("R/", "", paste(getwd(),"/inst/extdata/fallas.db", sep = "")))
+#Query para descargar datos filtrados por fecha
+res <- dbSendQuery(conn, "
+SELECT id_evento, fecha, hora, et, salida, evento, tension, zona
+FROM eventos
+LEFT JOIN  salidas ON
+eventos.id_salida = salidas.id_salida
+LEFT JOIN eett ON
+salidas.id_et = eett.id_et
+WHERE date(fecha) > ? AND date(fecha) < ?;", params = list(f_ini, f_fin))
+eventos <- dbFetch(res)
+dbClearResult(res)
+
+eventos$fecha <- as.Date(eventos$fecha)
+```
+
+
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+
+**Resumen**
+
+El presente informe resume las cantidades de eventos de fallas que se produjeron en las estaciones transformadoras de toda la provincia. Se presentan tanto de manera general para toda la provincia y discriminado por zona (norte y sur). Además, se diferencia según el nivel de tensión (AT y MT).
+
+El formato utilizado para mostrar el nombre de cada salida es: ET - SALIDA - NIVEL DE TENSIÓN
+
+La información corresponde a los eventos producidos entre las siguientes fechas:
+
+- Fecha de inicio: `r format(as.Date(f_ini), '%d de %B de %Y')`
+- Fecha de final: `r format(as.Date(f_fin), '%d de %B de %Y')`
+
+
+# Informe de toda la provincia 
+
+## Alta tensión
+
+```{r fig_at, echo=FALSE, fig.dim = c(8.5, 10)}
+
+grafico_fallas(eventos, filtro_v = '132kV', top = top)
+
+```
+
+\newpage
+
+## Media tensión
+
+```{r fig_mt, echo=FALSE, fig.dim = c(8, 10)}
+
+grafico_fallas(eventos, filtro_v = '66kV|33kV|11kV|13,2kV', top = top)
+
+```
+
+\newpage
+
+# Informe de Zona Sur
+
+## Alta tensión
+
+```{r fig_at_sur, echo=FALSE, fig.dim = c(8, 10)}
+
+grafico_fallas(eventos, filtro_v = '132kV', filtro_zona = 'SUR', top = top)
+
+```
+
+\newpage
+
+## Media tensión
+
+```{r fig_mt_sur, echo=FALSE, fig.dim = c(8, 10)}
+
+grafico_fallas(eventos, filtro_v = '66kV|33kV|11kV|13,2kV', filtro_zona = 'SUR', top = top)
+
+```
+
+\newpage
+
+# Informe de Zona Norte 
+
+## Alta tensión
+
+```{r fig_at_norte, echo=FALSE, fig.dim = c(8, 10)}
+
+grafico_fallas(eventos, filtro_v = '132kV', filtro_zona = 'NORTE', top = top)
+
+```
+
+\newpage
+
+## Media tensión
+
+```{r fig_mt_norte, echo=FALSE, fig.dim = c(8, 10)}
+
+grafico_fallas(eventos, filtro_v = '66kV|33kV|11kV|13,2kV', filtro_zona = 'NORTE', top = top)
+
+```
