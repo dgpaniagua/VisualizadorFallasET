@@ -6,7 +6,8 @@
 #'
 #' @noRd 
 #'
-#' @importFrom shiny NS tagList 
+#' @importFrom shiny NS tagList
+ 
 mod_eventos_ui <- function(id){
   ns <- NS(id)
 
@@ -27,7 +28,7 @@ mod_eventos_ui <- function(id){
                  checkboxInput(ns("ver_hora"), "Ingresar Hora", value = TRUE),
                  conditionalPanel(
                    condition = "input.ver_hora == true", ns = ns,
-                   timeInput(ns("hora"), "HORA", value = Sys.time(), seconds = FALSE)
+                   shinyTime::timeInput(ns("hora"), "HORA", value = Sys.time(), seconds = FALSE)
                  ),
                  
                  selectInput(ns("evento"), "TIPO DE EVENTO", choices = c("RECIERRE", "CORTE")),
@@ -45,6 +46,8 @@ mod_eventos_ui <- function(id){
 }
     
 #' eventos Server Functions
+#' 
+#' @importFrom stats reorder
 #'
 #' @noRd 
 mod_eventos_server <- function(id){
@@ -52,10 +55,11 @@ mod_eventos_server <- function(id){
     ns <- session$ns
     
     output$et <- renderUI({
-      conn <- DBI::dbConnect(RSQLite::SQLite(), "inst/extdata/fallas.db")
+      conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
       res <- dbSendQuery(conn, "
           SELECT et
-          FROM eett;")
+          FROM eett
+          ORDER BY et ASC;")
       et_choices <- dbFetch(res)[,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
@@ -63,13 +67,14 @@ mod_eventos_server <- function(id){
     })
     
     output$salida <- renderUI({
-      conn <- DBI::dbConnect(RSQLite::SQLite(), "inst/extdata/fallas.db")
+      conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
       res <- dbSendQuery(conn, "
           SELECT salida
           FROM salidas
           LEFT JOIN eett ON
           salidas.id_et = eett.id_et
-          WHERE et = ?;")
+          WHERE et = ?
+          ORDER BY salida ASC;")
       dbBind(res, list(input$eett))
       salida_choices <- dbFetch(res)[,1]
       dbClearResult(res)
@@ -78,13 +83,14 @@ mod_eventos_server <- function(id){
     })
     
     output$tension <- renderUI({
-      conn <- DBI::dbConnect(RSQLite::SQLite(), "inst/extdata/fallas.db")
+      conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
       res <- dbSendQuery(conn, "
           SELECT tension
           FROM salidas
           LEFT JOIN eett ON
           salidas.id_et = eett.id_et
-          WHERE et = ? AND salida = ?;")
+          WHERE et = ? AND salida = ?
+          ORDER BY tension ASC;")
       dbBind(res, list(input$eett, input$sal))
       tension_choices <- dbFetch(res)[,1]
       dbClearResult(res)
@@ -94,7 +100,7 @@ mod_eventos_server <- function(id){
     
     observeEvent(input$ingresar, {
       shinyalert(
-        title = "Confirmación",
+        title = "Confirmar",
         text = "¿Ingresar evento?",
         size = "s", 
         closeOnEsc = TRUE,
@@ -111,7 +117,7 @@ mod_eventos_server <- function(id){
         animation = TRUE,
         callbackR = function(x) {
           if(x) {
-            conn <- DBI::dbConnect(RSQLite::SQLite(), "inst/extdata/fallas.db")
+            conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
             res <- dbSendQuery(conn, "
               SELECT id_salida
               FROM salidas
@@ -154,7 +160,7 @@ mod_eventos_server <- function(id){
     })
     
     output$table <- DT::renderDataTable({
-      conn <- DBI::dbConnect(RSQLite::SQLite(), "inst/extdata/fallas.db")
+      conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
       res <- dbSendQuery(conn, "
           SELECT id_evento, fecha, hora, et, salida, tension, evento
           FROM eventos
@@ -163,7 +169,7 @@ mod_eventos_server <- function(id){
           LEFT JOIN eett ON
           salidas.id_et = eett.id_et;")
       tabla <- dbFetch(res)
-      tabla <- arrange(tabla, desc(fecha), desc(hora), desc(id_evento))
+      tabla <- arrange(tabla, desc(.data$fecha), desc(.data$hora), desc(.data$id_evento))
       names(tabla) <- c("ID","Fecha", "Hora", "ET", "Salida", "Tension", "Evento")
       dbClearResult(res)
       DBI::dbDisconnect(conn)

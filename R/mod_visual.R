@@ -8,19 +8,9 @@
 #'
 #' @importFrom shiny NS tagList 
 
-library(shiny)
-library(RSQLite)
-library(shinyTime)
-library(dplyr)
-library(shinyalert)
-library(ggplot2)
-library(ggthemes)
-library(scales)
-#source("R/grafico_fallas.R")
-
 mod_visual_ui <- function(id){
   ns <- NS(id)
-  tabPanel("Visualización de Eventos",
+  tabPanel("Visualizar Eventos",
            
      sidebarLayout(
        
@@ -30,7 +20,7 @@ mod_visual_ui <- function(id){
          
          selectInput(ns("zona"), "Ingresar Zona", choices = c("SUR", "NORTE", "PROVINCIA"="NORTE|SUR")),
          
-         numericInput(ns("top"), "Cantidad de salidas a mostrar", value = 40, min = 10, max = 500),
+         numericInput(ns("top"), "Cantidad de salidas a mostrar", value = 35, min = 10, max = 500),
          
          #Rango de fechas
          dateRangeInput(ns("daterange"), "Ingresar rango de fechas deseado:",
@@ -57,7 +47,7 @@ mod_visual_server <- function(id){
     ns <- session$ns
     
     output$plot <- renderPlot({
-      conn <- DBI::dbConnect(RSQLite::SQLite(), "inst/extdata/fallas.db")
+      conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db")) #With get_golem_options uses the parameter passed in the run_app function (in golem_opts)
       res <- DBI::dbSendQuery(conn, "
           SELECT id_evento, fecha, hora, et, salida, evento, tension, zona
           FROM eventos
@@ -76,10 +66,10 @@ mod_visual_server <- function(id){
     output$report <- downloadHandler(
       filename = "Informe.pdf",
       content = function(file) {
-        report <- "R/informe.Rmd"
+        report <- system.file("extdata","informe.Rmd", package = "VisualizadorFallasET")
 
         # Set up parameters to pass to Rmd document
-        params <- list(n = input$daterange, top = input$top)
+        params <- list(n = input$daterange, top = input$top, db_path = golem::get_golem_options("db"))
 
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document

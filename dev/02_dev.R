@@ -23,12 +23,15 @@ usethis::use_package( "shinyalert" )
 usethis::use_package( "ggplot2" )
 usethis::use_package( "ggthemes" )
 usethis::use_package( "scales" )
-
+usethis::use_package( "rmarkdown" )
+usethis::use_package( "stats" )
+usethis::use_package( "knitr" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
 golem::add_module( name = "visual" ) # Name of the module
 golem::add_module( name = "eventos" ) # Name of the module
+golem::add_module( name = "salidas" ) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*

@@ -11,24 +11,26 @@
 #' @param top Numeric. Number of outputs (bars) to plot.
 #'
 #' @return NULL.
+#' 
+#' @export
+#' 
+#' @import dplyr
+#' @import ggplot2
+#' @import ggthemes
+#' @import scales
 #'
 #' @noRd
 
-library(dplyr)
-library(ggplot2)
-library(ggthemes)
-library(scales)
-
-grafico_fallas <- function(eventos, filtro_v, filtro_zona='', top=40){
-  actuaciones <- eventos %>% mutate(interrupt = paste(et, "-", salida, "-", tension)) %>%
-    group_by(interrupt) %>%
-    summarize(actuaciones = n(), zona = first(zona), tension = first(tension)) %>%
+grafico_fallas <- function(eventos, filtro_v, filtro_zona='', top=35){
+  actuaciones <- eventos %>% mutate(interrupt = paste(.data$et, "-", .data$salida, "-", .data$tension)) %>%
+    group_by(.data$interrupt) %>%
+    summarize(actuaciones = n(), zona = first(.data$zona), tension = first(.data$tension)) %>%
     arrange(desc(actuaciones))
   
-  actuaciones %>% filter(grepl(filtro_v, tension), grepl(filtro_zona, zona)) %>% 
-    mutate(interrupt = reorder(interrupt, actuaciones)) %>%
+  actuaciones %>% filter(grepl(filtro_v, .data$tension), grepl(filtro_zona, .data$zona)) %>% 
+    mutate(interrupt = reorder(.data$interrupt, actuaciones)) %>%
     slice_head(n=top) %>%
-    ggplot(aes(interrupt, actuaciones)) + 
+    ggplot(aes(.data$interrupt, actuaciones)) + 
     geom_col(width = 0.7, position = position_dodge(0.7), fill="steelblue", color="steelblue") + 
     xlab("Salida") +
     ylab("Cantidad de Fallas") +

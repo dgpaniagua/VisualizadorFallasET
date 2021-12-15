@@ -3,6 +3,8 @@
 #' @param request Internal parameter for `{shiny}`. 
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @importFrom shinyTime timeInput
+#' @importFrom shinyalert useShinyalert shinyalert
 #' @noRd
 app_ui <- function(request) {
   tagList(
@@ -11,7 +13,8 @@ app_ui <- function(request) {
     # Your application UI logic 
     navbarPage("EPE",
       mod_visual_ui("visual_ui_1"),
-      mod_eventos_ui("eventos_ui_1")
+      mod_eventos_ui("eventos_ui_1"),
+      mod_salidas_ui("salidas_ui_1")
 
     )
   )

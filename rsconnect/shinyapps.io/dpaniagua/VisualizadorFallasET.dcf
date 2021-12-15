@@ -1,0 +1,13 @@
+name: VisualizadorFallasET
+title: VisualizadorFallasET
+username:
+account: dpaniagua
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5272584
+bundleId: 5336554
+url: https://dpaniagua.shinyapps.io/VisualizadorFallasET/
+when: 1638831169.20546
+lastSyncTime: 1638831169.20546
+asMultiple: FALSE
+asStatic: FALSE
