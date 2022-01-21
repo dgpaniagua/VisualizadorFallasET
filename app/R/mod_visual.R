@@ -49,7 +49,7 @@ mod_visual_server <- function(id){
     output$plot <- renderPlot({
       conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db")) #With get_golem_options uses the parameter passed in the run_app function (in golem_opts)
       res <- DBI::dbSendQuery(conn, "
-          SELECT id_evento, fecha, hora, et, salida, evento, tension, zona
+          SELECT id_evento, fecha, hora, et, salida, evento, tension, zona, fecha_mant
           FROM eventos
           LEFT JOIN  salidas ON
           eventos.id_salida = salidas.id_salida

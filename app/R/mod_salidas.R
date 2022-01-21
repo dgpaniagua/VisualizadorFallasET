@@ -112,13 +112,13 @@ mod_salidas_server <- function(id){
     output$table <- DT::renderDataTable({
       conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
       res <- dbSendQuery(conn, "
-          SELECT id_salida, et, salida, tension
+          SELECT id_salida, et, salida, tension, fecha_mant
           FROM salidas
           LEFT JOIN eett ON
           salidas.id_et = eett.id_et;")
       tabla <- dbFetch(res)
       tabla <- arrange(tabla, .data$et, .data$salida)
-      names(tabla) <- c("ID", "ET", "Salida", "Tension")
+      names(tabla) <- c("ID", "ET", "Salida", "Tension", "Fecha Mant")
       dbClearResult(res)
       DBI::dbDisconnect(conn)
       DT::datatable(tabla, rownames = FALSE)

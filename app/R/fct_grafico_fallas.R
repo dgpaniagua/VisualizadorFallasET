@@ -22,12 +22,15 @@
 #' @noRd
 
 grafico_fallas <- function(eventos, filtro_v, filtro_zona='', top=35){
-  actuaciones <- eventos %>% mutate(interrupt = paste(.data$et, "-", .data$salida, "-", .data$tension)) %>%
+  actuaciones <- eventos %>% mutate(interrupt = paste(.data$et, "-", 
+                                                      .data$salida, "-", .data$tension)) %>%
     group_by(.data$interrupt) %>%
-    summarize(actuaciones = n(), zona = first(.data$zona), tension = first(.data$tension)) %>%
+    summarize(actuaciones = n(), zona = first(.data$zona), tension = first(.data$tension),
+              fecha = first(.data$fecha), fecha_mant = first(.data$fecha_mant)) %>%
     arrange(desc(actuaciones))
   
-  actuaciones %>% filter(grepl(filtro_v, .data$tension), grepl(filtro_zona, .data$zona)) %>% 
+  actuaciones %>% filter(grepl(filtro_v, .data$tension), grepl(filtro_zona, .data$zona), 
+                         as.Date(.data$fecha_mant) < as.Date(.data$fecha)) %>% 
     mutate(interrupt = reorder(.data$interrupt, actuaciones)) %>%
     slice_head(n=top) %>%
     ggplot(aes(.data$interrupt, actuaciones)) + 
