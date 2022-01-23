@@ -83,9 +83,7 @@ mod_salidas_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    #output$text_modificar1 <- renderPrint({"Ingrese el ID de la salida a modificar:"})
-    
-    #output$text_modificar2 <- renderPrint({"Ingrese los campos a modificar:"})
+    ##### INGRESAR #####
     
     output$et <- renderUI({
       conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
@@ -99,6 +97,62 @@ mod_salidas_server <- function(id){
       selectInput(NS(id,"eett"), "ET", choices = et_choices)
     })
     
+    observeEvent(input$ingresar_salida, {
+      shinyalert(
+        title = "Confirmar",
+        text = "¿Ingresar salida?",
+        size = "s", 
+        closeOnEsc = TRUE,
+        closeOnClickOutside = TRUE,
+        html = FALSE,
+        type = "info",
+        showConfirmButton = TRUE,
+        showCancelButton = TRUE,
+        confirmButtonText = "OK",
+        confirmButtonCol = "#AEDEF4",
+        cancelButtonText = "Cancel",
+        timer = 0,
+        imageUrl = "",
+        animation = TRUE,
+        callbackR = function(x) {
+          if(x) {
+            conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
+            res <- dbSendQuery(conn, "
+                SELECT id_et
+                FROM eett
+                WHERE et = ?;")
+            dbBind(res, list(input$eett))
+            id_et <- dbFetch(res)[1,1]
+            dbClearResult(res)
+            
+            res <- dbSendQuery(conn, "
+                INSERT INTO salidas(id_et, salida, tension, fecha_mant)
+                VALUES (?, ?, ?, ?);")
+            dbBind(res, list(id_et, input$salida, input$tension, as.character(as.Date(input$fecha_mant))))
+            dbClearResult(res)
+            DBI::dbDisconnect(conn)
+            shinyalert(
+              title = "Salida Ingresada",
+              text = "La salida fue ingresada correctamente. Recargar explorador para verla en la tabla.",
+              size = "xs", 
+              closeOnEsc = TRUE,
+              closeOnClickOutside = TRUE,
+              html = FALSE,
+              type = "success",
+              showConfirmButton = TRUE,
+              showCancelButton = FALSE,
+              confirmButtonText = "OK",
+              confirmButtonCol = "#AEDEF4",
+              timer = 0,
+              imageUrl = "",
+              animation = TRUE
+              
+            )}}
+      )
+    })
+    
+    ##### MODIFICAR #####
+
     output$id_modificar <- renderUI({
       conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
       res <- dbSendQuery(conn, "
@@ -170,62 +224,7 @@ mod_salidas_server <- function(id){
       DBI::dbDisconnect(conn)
       dateInput(NS(id,"fecha_mant_modificar"), "Ingresar fecha del último mantenimiento", language="es", value = fecha_mant_selected)
     })
-    
-    
-    observeEvent(input$ingresar_salida, {
-      shinyalert(
-        title = "Confirmar",
-        text = "¿Ingresar salida?",
-        size = "s", 
-        closeOnEsc = TRUE,
-        closeOnClickOutside = TRUE,
-        html = FALSE,
-        type = "info",
-        showConfirmButton = TRUE,
-        showCancelButton = TRUE,
-        confirmButtonText = "OK",
-        confirmButtonCol = "#AEDEF4",
-        cancelButtonText = "Cancel",
-        timer = 0,
-        imageUrl = "",
-        animation = TRUE,
-        callbackR = function(x) {
-          if(x) {
-            conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
-            res <- dbSendQuery(conn, "
-                SELECT id_et
-                FROM eett
-                WHERE et = ?;")
-            dbBind(res, list(input$eett))
-            id_et <- dbFetch(res)[1,1]
-            dbClearResult(res)
-            
-            res <- dbSendQuery(conn, "
-                INSERT INTO salidas(id_et, salida, tension, fecha_mant)
-                VALUES (?, ?, ?, ?);")
-            dbBind(res, list(id_et, input$salida, input$tension, as.character(as.Date(input$fecha_mant))))
-            dbClearResult(res)
-            DBI::dbDisconnect(conn)
-            shinyalert(
-              title = "Salida Ingresada",
-              text = "La salida fue ingresada correctamente. Recargar explorador para verla en la tabla.",
-              size = "xs", 
-              closeOnEsc = TRUE,
-              closeOnClickOutside = TRUE,
-              html = FALSE,
-              type = "success",
-              showConfirmButton = TRUE,
-              showCancelButton = FALSE,
-              confirmButtonText = "OK",
-              confirmButtonCol = "#AEDEF4",
-              timer = 0,
-              imageUrl = "",
-              animation = TRUE
-              
-            )}}
-      )
-    })
-    
+        
     observeEvent(input$modificar_salida, {
       shinyalert(
         title = "Confirmar modificación",
@@ -280,6 +279,8 @@ mod_salidas_server <- function(id){
             )}}
       )
     })
+    
+    ##### TABLA #####
     
     output$table <- DT::renderDataTable({
       conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
