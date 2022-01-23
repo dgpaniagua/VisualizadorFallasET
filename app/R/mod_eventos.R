@@ -11,7 +11,7 @@
 mod_eventos_ui <- function(id){
   ns <- NS(id)
 
-    tabPanel("Ingresar Evento",
+    tabPanel("Eventos",
              
              sidebarLayout(
                
@@ -23,7 +23,7 @@ mod_eventos_ui <- function(id){
                  
                  uiOutput(ns("tension")),
                  
-                 dateInput(ns("fecha"), "FECHA", value = Sys.Date()),
+                 dateInput(ns("fecha"), "FECHA", language="es",value = Sys.Date()),
                  
                  checkboxInput(ns("ver_hora"), "Ingresar Hora", value = TRUE),
                  conditionalPanel(

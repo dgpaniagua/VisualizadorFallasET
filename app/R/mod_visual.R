@@ -10,7 +10,7 @@
 
 mod_visual_ui <- function(id){
   ns <- NS(id)
-  tabPanel("Visualizar Eventos",
+  tabPanel("Visualizar Resultados",
            
      sidebarLayout(
        
@@ -26,6 +26,7 @@ mod_visual_ui <- function(id){
          dateRangeInput(ns("daterange"), "Ingresar rango de fechas deseado:",
                         start = "2020-07-01",
                         end   = "2021-12-31",
+                        language = "es",
                         separator = " hasta "),
          
          #Botón de descarga

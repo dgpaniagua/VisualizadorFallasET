@@ -1,5 +1,0 @@
-1) Agregar columna fecha_mant en tabla salidas db (se hace en pps-ie-epe) y copiar nueva db.
-2) Modificar función grafico_fallas. Ya se cambió y probó en pps-ie-epe (copiar).
-3) Agregar pantalla para modificar salidas, incluyendo fecha_mant
-3.1. Modificar estilo de pestaña: usar pestaña "Salidas" con lista desplegable con "Ingresar" y "Modificar"
-3.2. Pestaña "Modificar"
