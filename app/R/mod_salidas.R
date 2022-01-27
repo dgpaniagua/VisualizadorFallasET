@@ -35,15 +35,11 @@ mod_salidas_ui <- function(id){
          
          tabPanel("Modificar", 
                   
-                  #textOutput(ns("text_modificar1")),
-                  
                   tags$div(class="h4", checked=NA,
                            tags$p("Ingrese el ID de la salida a modificar:"),
                   ),
                   
                   uiOutput(ns("id_modificar")),
-                  
-                  #textOutput(ns("text_modificar2")),
                   
                   tags$div(class="h4", checked=NA,
                            tags$p("Modifique los campos que desee:"),
