@@ -248,12 +248,12 @@ mod_eventos_server <- function(id){
       dbClearResult(res)
       res <- dbSendQuery(conn, "
           SELECT salida
-          FROM salidas
-          LEFT JOIN  eventos ON
+          FROM eventos
+          LEFT JOIN  salidas ON
           salidas.id_salida = eventos.id_salida
           WHERE id_evento = ?;")
       dbBind(res, list(input$id_modif))
-      salida_selected <- dbFetch(res)[,1]
+      salida_selected <- dbFetch(res)[1,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
       selectInput(NS(id,"salida_modificar"), "Ingresar nombre de la salida", 
@@ -273,8 +273,8 @@ mod_eventos_server <- function(id){
       dbClearResult(res)
       res <- dbSendQuery(conn, "
           SELECT tension
-          FROM salidas
-          LEFT JOIN  eventos ON
+          FROM eventos
+          LEFT JOIN  salidas ON
           salidas.id_salida = eventos.id_salida
           WHERE id_evento = ?;")
       dbBind(res, list(input$id_modif))
