@@ -46,11 +46,11 @@ docker build -t epe/visualizadorfallas .
 
 La aplicación se ejecuta en el servidor Shinyproxy, que correrá en otra
 imagen que será compilada en el punto siguiente. Previo a la
-compilación, debe configurarse el servidro Shinyproxy modificando el
+compilación, debe configurarse el servidor Shinyproxy modificando el
 archivo application.yml que se encuentra en la carpeta shinyproxy. El
-único campo que se debe modificar de forma de forma obligatoria es la
-ruta absoluta a la carpeta de la base de datos, en el parámetro
-**container-volumes**
+único campo que se debe modificar de forma obligatoria es la ruta
+absoluta a la carpeta de la base de datos, en el parámetro
+**container-volumes**.
 
     container-volumes: RUTA-ABSOLUTA-A-MODIFICAR\shinyproxy\db\:/mnt/persistent
 
@@ -72,6 +72,7 @@ Luego, se debe compilar la imagen. Se utilizará el nombre
 shinyproxy-epe:
 
 ``` bash
+cd ..
 cd shinyproxy
 docker build -t shinyproxy-epe .
 ```
