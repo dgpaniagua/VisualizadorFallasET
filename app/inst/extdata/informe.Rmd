@@ -33,7 +33,7 @@ top = params$top
 conn <- dbConnect(RSQLite::SQLite(), params$db_path)
 #Query para descargar datos filtrados por fecha
 res <- dbSendQuery(conn, "
-SELECT id_evento, fecha, hora, et, salida, evento, tension, zona
+SELECT id_evento, fecha, hora, et, salida, evento, tension, zona, fecha_mant
 FROM eventos
 LEFT JOIN  salidas ON
 eventos.id_salida = salidas.id_salida
