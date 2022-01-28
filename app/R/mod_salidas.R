@@ -57,7 +57,21 @@ mod_salidas_ui <- function(id){
                   
                   useShinyalert()
                   
-                  )
+                  ),
+         
+         tabPanel("Eliminar", 
+                  
+                  tags$div(class="h4", checked=NA,
+                           tags$p("Ingrese el ID de la salida a eliminar:"),
+                  ),
+                  
+                  uiOutput(ns("id_eliminar")),
+                  
+                  actionButton(ns("eliminar_salida"), "Eliminar Salida"),
+                  
+                  useShinyalert()
+                  
+         )
          
        ),
       
@@ -259,6 +273,67 @@ mod_salidas_server <- function(id){
             shinyalert(
               title = "Salida Modificada",
               text = "La salida fue modificada correctamente. Recargar explorador para verla en la tabla.",
+              size = "xs", 
+              closeOnEsc = TRUE,
+              closeOnClickOutside = TRUE,
+              html = FALSE,
+              type = "success",
+              showConfirmButton = TRUE,
+              showCancelButton = FALSE,
+              confirmButtonText = "OK",
+              confirmButtonCol = "#AEDEF4",
+              timer = 0,
+              imageUrl = "",
+              animation = TRUE
+              
+            )}}
+      )
+    })
+    
+    
+    ##### ELIMINAR #####
+    
+    output$id_eliminar <- renderUI({
+      conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
+      res <- dbSendQuery(conn, "
+          SELECT id_salida
+          FROM salidas
+          ORDER BY id_salida ASC;")
+      id_choices <- dbFetch(res)[,1]
+      dbClearResult(res)
+      DBI::dbDisconnect(conn)
+      selectInput(NS(id,"id_elim"), "ID", choices = id_choices)
+    })
+    
+    observeEvent(input$eliminar_salida, {
+      shinyalert(
+        title = "Confirmar eliminación",
+        text = "¿Eliminar salida?",
+        size = "s", 
+        closeOnEsc = TRUE,
+        closeOnClickOutside = TRUE,
+        html = FALSE,
+        type = "info",
+        showConfirmButton = TRUE,
+        showCancelButton = TRUE,
+        confirmButtonText = "OK",
+        confirmButtonCol = "#AEDEF4",
+        cancelButtonText = "Cancel",
+        timer = 0,
+        imageUrl = "",
+        animation = TRUE,
+        callbackR = function(x) {
+          if(x) {
+            conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
+            res <- dbSendQuery(conn, "
+                DELETE FROM salidas
+                WHERE id_salida = ?;")
+            dbBind(res, list(input$id_elim))
+            dbClearResult(res)
+            DBI::dbDisconnect(conn)
+            shinyalert(
+              title = "Salida Eliminada",
+              text = "La salida fue eliminada correctamente. Recargar explorador para verla en la tabla.",
               size = "xs", 
               closeOnEsc = TRUE,
               closeOnClickOutside = TRUE,

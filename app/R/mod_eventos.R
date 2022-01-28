@@ -71,6 +71,20 @@ mod_eventos_ui <- function(id){
                             
                             useShinyalert()
                      
+                   ),
+                   
+                   tabPanel("Eliminar",
+                            
+                            tags$div(class="h4", checked=NA,
+                                     tags$p("Ingrese el ID del evento a eliminar:"),
+                            ),
+                            
+                            uiOutput(ns("id_eliminar")),
+                            
+                            actionButton(ns("eliminar_evento"), "Eliminar Evento"),
+                            
+                            useShinyalert()
+                            
                    )
                  )
                ),
@@ -383,6 +397,68 @@ mod_eventos_server <- function(id){
             )}}
       )
     })
+    
+    ##### ELIMINAR #####
+    
+    output$id_eliminar <- renderUI({
+      conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
+      res <- dbSendQuery(conn, "
+          SELECT id_evento
+          FROM eventos
+          ORDER BY id_evento ASC;")
+      id_choices <- dbFetch(res)[,1]
+      dbClearResult(res)
+      DBI::dbDisconnect(conn)
+      selectizeInput(NS(id,"id_elim"), "ID", options=list(maxOptions = 100000), id_choices)
+    })
+    
+    observeEvent(input$eliminar_evento, {
+      shinyalert(
+        title = "Confirmar eliminación",
+        text = "¿Eliminar evento?",
+        size = "s", 
+        closeOnEsc = TRUE,
+        closeOnClickOutside = TRUE,
+        html = FALSE,
+        type = "info",
+        showConfirmButton = TRUE,
+        showCancelButton = TRUE,
+        confirmButtonText = "OK",
+        confirmButtonCol = "#AEDEF4",
+        cancelButtonText = "Cancel",
+        timer = 0,
+        imageUrl = "",
+        animation = TRUE,
+        callbackR = function(x) {
+          if(x) {
+            conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
+            res <- dbSendQuery(conn, "
+                DELETE FROM eventos
+                WHERE id_evento = ?;")
+            dbBind(res, list(input$id_elim))
+            dbClearResult(res)
+            DBI::dbDisconnect(conn)
+            shinyalert(
+              title = "Evento Eliminado",
+              text = "El evento fue eliminado correctamente. Recargar explorador para verlo en la tabla.",
+              size = "xs", 
+              closeOnEsc = TRUE,
+              closeOnClickOutside = TRUE,
+              html = FALSE,
+              type = "success",
+              showConfirmButton = TRUE,
+              showCancelButton = FALSE,
+              confirmButtonText = "OK",
+              confirmButtonCol = "#AEDEF4",
+              timer = 0,
+              imageUrl = "",
+              animation = TRUE
+              
+            )}}
+      )
+    })
+    
+    ##### TABLA #####
     
     output$table <- DT::renderDataTable({
       conn <- DBI::dbConnect(RSQLite::SQLite(), golem::get_golem_options("db"))
