@@ -21,21 +21,25 @@ mod_eventos_ui <- function(id){
                    
                    tabPanel("Ingresar",
                             
+                            tags$div(class="h5", checked=NA,
+                                     tags$b("INGRESE LOS SIGUIENTES CAMPOS"),
+                            ),
+                            
                             uiOutput(ns("et")),
                             
                             uiOutput(ns("salida")),
                  
                             uiOutput(ns("tension")),
                             
-                            dateInput(ns("fecha"), "FECHA", language="es",value = Sys.Date()),
+                            dateInput(ns("fecha"), "Fecha", language="es",value = Sys.Date()),
                             
                             checkboxInput(ns("ver_hora"), "Ingresar Hora", value = TRUE),
                             conditionalPanel(
                               condition = "input.ver_hora == true", ns = ns,
-                              shinyTime::timeInput(ns("hora"), "HORA", value = Sys.time(), seconds = FALSE)
+                              shinyTime::timeInput(ns("hora"), "Hora", value = Sys.time(), seconds = FALSE)
                             ),
                             
-                            selectInput(ns("evento"), "TIPO DE EVENTO", choices = c("RECIERRE", "CORTE")),
+                            selectInput(ns("evento"), "Tipo de evento", choices = c("RECIERRE", "CORTE")),
                             
                             actionButton(ns("ingresar"), "Ingresar Evento"),
                             
@@ -45,14 +49,14 @@ mod_eventos_ui <- function(id){
                    
                    tabPanel("Modificar",
                             
-                            tags$div(class="h4", checked=NA,
-                                     tags$p("Ingrese el ID del evento a modificar:"),
+                            tags$div(class="h5", checked=NA,
+                                     tags$b("INGRESE EL ID DEL EVENTO A MODIFICAR"),
                             ),
                             
                             uiOutput(ns("id_modificar")),
                             
-                            tags$div(class="h4", checked=NA,
-                                     tags$p("Modifique los campos que desee:"),
+                            tags$div(class="h5", checked=NA,
+                                     tags$b("MODIFIQUE LOS CAMPOS QUE DESEE"),
                             ),
                             
                             uiOutput(ns("et_modificar")),
@@ -75,8 +79,8 @@ mod_eventos_ui <- function(id){
                    
                    tabPanel("Eliminar",
                             
-                            tags$div(class="h4", checked=NA,
-                                     tags$p("Ingrese el ID del evento a eliminar:"),
+                            tags$div(class="h5", checked=NA,
+                                     tags$b("INGRESE EL ID DEL EVENTO A ELIMINAR"),
                             ),
                             
                             uiOutput(ns("id_eliminar")),
@@ -132,7 +136,7 @@ mod_eventos_server <- function(id){
       salida_choices <- dbFetch(res)[,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      selectInput(NS(id,"sal"), "SALIDA", choices = salida_choices)
+      selectInput(NS(id,"sal"), "Nombre de la salida", choices = salida_choices)
     })
     
     output$tension <- renderUI({
@@ -148,7 +152,7 @@ mod_eventos_server <- function(id){
       tension_choices <- dbFetch(res)[,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      selectInput(NS(id,"volt"), "TENSION", choices = tension_choices)
+      selectInput(NS(id,"volt"), "Nivel de tensión", choices = tension_choices)
     })
     
     observeEvent(input$ingresar, {
@@ -270,7 +274,7 @@ mod_eventos_server <- function(id){
       salida_selected <- dbFetch(res)[1,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      selectInput(NS(id,"salida_modificar"), "Ingresar nombre de la salida", 
+      selectInput(NS(id,"salida_modificar"), "Nombre de la salida", 
                   selected = salida_selected, choices = salida_choices)
     })
     
@@ -295,7 +299,7 @@ mod_eventos_server <- function(id){
       tension_selected <- dbFetch(res)[,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      selectInput(NS(id,"tension_modificar"), "Ingresar nivel de tensión", 
+      selectInput(NS(id,"tension_modificar"), "Nivel de tensión", 
                   selected = tension_selected, choices = tension_choices)
     })
     
@@ -309,7 +313,7 @@ mod_eventos_server <- function(id){
       fecha_selected <- dbFetch(res)[,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      dateInput(NS(id,"fecha_modificar"), "Ingresar fecha", language="es", value = fecha_selected)
+      dateInput(NS(id,"fecha_modificar"), "Fecha", language="es", value = fecha_selected)
     })
 
     output$hora_modif <- renderUI({
@@ -322,7 +326,7 @@ mod_eventos_server <- function(id){
       hora_selected <- dbFetch(res)[,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      shinyTime::timeInput(NS(id,"hora_modificar"), "Ingresar hora", seconds = FALSE, value = as.POSIXct(hora_selected, format = "%H:%M"))
+      shinyTime::timeInput(NS(id,"hora_modificar"), "Hora", seconds = FALSE, value = as.POSIXct(hora_selected, format = "%H:%M"))
     })
     
     output$evento_modif <- renderUI({
@@ -335,7 +339,7 @@ mod_eventos_server <- function(id){
       evento_selected <- dbFetch(res)[,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      selectInput(NS(id,"evento_modificar"), "Ingresar tipo de evento", selected = evento_selected, choices = c("RECIERRE", "CORTE"))
+      selectInput(NS(id,"evento_modificar"), "Tipo de evento", selected = evento_selected, choices = c("RECIERRE", "CORTE"))
     })
     
     observeEvent(input$modificar_evento, {

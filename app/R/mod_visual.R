@@ -16,14 +16,18 @@ mod_visual_ui <- function(id){
        
        sidebarPanel(
          
-         selectInput(ns("tension"), "Ingresar nivel de tensión", choices = c("MEDIA TENSION"="33kV|11kV|13,2kV", "ALTA TENSION"="132kV", "33kV", "13,2kV")),
+         tags$div(class="h5", checked=NA,
+                  tags$b("FILTROS PARA VISUALIZAR RESULTADOS"),
+         ),
          
-         selectInput(ns("zona"), "Ingresar Zona", choices = c("SUR", "NORTE", "PROVINCIA"="NORTE|SUR")),
+         selectInput(ns("tension"), "Nivel de tensión", choices = c("MEDIA TENSION"="33kV|11kV|13,2kV", "ALTA TENSION"="132kV", "33kV", "13,2kV")),
+         
+         selectInput(ns("zona"), "Zona", choices = c("SUR", "NORTE", "PROVINCIA"="NORTE|SUR")),
          
          numericInput(ns("top"), "Cantidad de salidas a mostrar", value = 35, min = 10, max = 500),
          
          #Rango de fechas
-         dateRangeInput(ns("daterange"), "Ingresar rango de fechas deseado:",
+         dateRangeInput(ns("daterange"), "Rango de fechas",
                         start = "2020-07-01",
                         end   = "2021-12-31",
                         language = "es",

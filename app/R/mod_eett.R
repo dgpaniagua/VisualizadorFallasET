@@ -20,9 +20,13 @@ mod_eett_ui <- function(id){
                  
                  tabPanel("Ingresar",
                           
-                          textInput(ns("et"), "Ingresar nombre de la ET"),
+                          tags$div(class="h5", checked=NA,
+                                   tags$b("INGRESE LOS SIGUIENTES CAMPOS"),
+                          ),
                           
-                          selectInput(ns("zona_ingresar"), "Ingresar zona geográfica", choices = c("NORTE", "SUR")),
+                          textInput(ns("et"), "Nombre de la ET"),
+                          
+                          selectInput(ns("zona_ingresar"), "Zona", choices = c("NORTE", "SUR")),
                           
                           actionButton(ns("ingresar_et"), "Ingresar ET"),
                           
@@ -31,14 +35,14 @@ mod_eett_ui <- function(id){
                  
                  tabPanel("Modificar", 
                           
-                          tags$div(class="h4", checked=NA,
-                                   tags$p("Ingrese el ID de la ET a modificar:"),
+                          tags$div(class="h5", checked=NA,
+                                   tags$b("INGRESE EL ID DE LA ET A MODIFICAR"),
                           ),
                           
                           uiOutput(ns("id_modificar")),
                           
-                          tags$div(class="h4", checked=NA,
-                                   tags$p("Modifique los campos que desee:"),
+                          tags$div(class="h5", checked=NA,
+                                   tags$b("MODIFIQUE LOS CAMPOS QUE DESEE"),
                           ),
                           
                           uiOutput(ns("et_modificar")),
@@ -53,8 +57,8 @@ mod_eett_ui <- function(id){
                  
                  tabPanel("Eliminar", 
                           
-                          tags$div(class="h4", checked=NA,
-                                   tags$p("Ingrese el ID de la ET a eliminar:"),
+                          tags$div(class="h5", checked=NA,
+                                   tags$b("INGRESE EL ID DE LA ET A ELIMINAR"),
                           ),
                           
                           uiOutput(ns("id_eliminar")),
@@ -170,7 +174,7 @@ mod_eett_server <- function(id){
       zona_selected <- dbFetch(res)[,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      selectInput(NS(id,"zona_modificar"), "Ingresar la zona geográfica", selected = zona_selected, choices = c("NORTE", "SUR"))
+      selectInput(NS(id,"zona_modificar"), "Zona", selected = zona_selected, choices = c("NORTE", "SUR"))
     })
     
     observeEvent(input$modificar_et, {

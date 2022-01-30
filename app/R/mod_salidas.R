@@ -20,13 +20,17 @@ mod_salidas_ui <- function(id){
          
          tabPanel("Ingresar",
                   
+                  tags$div(class="h5", checked=NA,
+                           tags$b("INGRESE LOS SIGUIENTES CAMPOS"),
+                  ),
+                  
                   uiOutput(ns("et")),
                   
-                  textInput(ns("salida"), "Ingresar nombre de la salida"),
+                  textInput(ns("salida"), "Nombre de la salida"),
                   
-                  selectInput(ns("tension"), "Ingresar nivel de tensión", choices = c("132kV", "66kV", "33kV", "13,2kV", "11kV")),
+                  selectInput(ns("tension"), "Nivel de tensión", choices = c("132kV", "66kV", "33kV", "13,2kV", "11kV")),
                   
-                  dateInput(ns("fecha_mant"), "Ingresar fecha del último mantenimiento", language="es", value = Sys.Date()),
+                  dateInput(ns("fecha_mant"), "Fecha del último mantenimiento", language="es", value = Sys.Date()),
                   
                   actionButton(ns("ingresar_salida"), "Ingresar Salida"),
                   
@@ -35,14 +39,14 @@ mod_salidas_ui <- function(id){
          
          tabPanel("Modificar", 
                   
-                  tags$div(class="h4", checked=NA,
-                           tags$p("Ingrese el ID de la salida a modificar:"),
+                  tags$div(class="h5", checked=NA,
+                           tags$b("INGRESE EL ID DE LA SALIDA A MODIFICAR"),
                   ),
                   
                   uiOutput(ns("id_modificar")),
                   
-                  tags$div(class="h4", checked=NA,
-                           tags$p("Modifique los campos que desee:"),
+                  tags$div(class="h5", checked=NA,
+                           tags$b("MODIFIQUE LOS CAMPOS QUE DESEE"),
                   ),
                   
                   uiOutput(ns("et_modificar")),
@@ -61,8 +65,8 @@ mod_salidas_ui <- function(id){
          
          tabPanel("Eliminar", 
                   
-                  tags$div(class="h4", checked=NA,
-                           tags$p("Ingrese el ID de la salida a eliminar:"),
+                  tags$div(class="h5", checked=NA,
+                           tags$b("INGRESE EL ID DE LA SALIDA A ELIMINAR"),
                   ),
                   
                   uiOutput(ns("id_eliminar")),
@@ -206,7 +210,7 @@ mod_salidas_server <- function(id){
       salida_selected <- dbFetch(res)[,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      textInput(NS(id,"salida_modificar"), "Ingresar nombre de la salida", value = salida_selected)
+      textInput(NS(id,"salida_modificar"), "Nombre de la salida", value = salida_selected)
     })
     
     output$tension_modif <- renderUI({
@@ -219,7 +223,7 @@ mod_salidas_server <- function(id){
       tension_selected <- dbFetch(res)[,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      selectInput(NS(id,"tension_modificar"), "Ingresar nivel de tensión", selected = tension_selected, choices = c("132kV", "66kV", "33kV", "13,2kV", "11kV"))
+      selectInput(NS(id,"tension_modificar"), "Nivel de tensión", selected = tension_selected, choices = c("132kV", "66kV", "33kV", "13,2kV", "11kV"))
     })
     
     output$fecha_mant_modif <- renderUI({
@@ -232,7 +236,7 @@ mod_salidas_server <- function(id){
       fecha_mant_selected <- dbFetch(res)[,1]
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      dateInput(NS(id,"fecha_mant_modificar"), "Ingresar fecha del último mantenimiento", language="es", value = fecha_mant_selected)
+      dateInput(NS(id,"fecha_mant_modificar"), "Fecha del último mantenimiento", language="es", value = fecha_mant_selected)
     })
         
     observeEvent(input$modificar_salida, {
