@@ -14,8 +14,8 @@ app_ui <- function(request) {
     navbarPage("EPE",
       mod_visual_ui("visual_ui_1"),
       mod_eventos_ui("eventos_ui_1"),
-      mod_salidas_ui("salidas_ui_1")
-
+      mod_salidas_ui("salidas_ui_1"),
+      mod_eett_ui("eett_ui_1")
     )
   )
 }
