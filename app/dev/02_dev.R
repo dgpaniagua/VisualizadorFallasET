@@ -33,6 +33,7 @@ golem::add_module( name = "visual" ) # Name of the module
 golem::add_module( name = "eventos" ) # Name of the module
 golem::add_module( name = "salidas" ) # Name of the module
 golem::add_module( name = "eett" ) # Name of the module
+golem::add_module( name = "ayuda" ) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*

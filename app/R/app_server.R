@@ -18,4 +18,5 @@ app_server <- function( input, output, session ) {
   mod_eventos_server("eventos_ui_1")
   mod_salidas_server("salidas_ui_1")
   mod_eett_server("eett_ui_1")
+  mod_ayuda_server("ayuda_ui_1")
 }

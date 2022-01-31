@@ -15,7 +15,8 @@ app_ui <- function(request) {
       mod_visual_ui("visual_ui_1"),
       mod_eventos_ui("eventos_ui_1"),
       mod_salidas_ui("salidas_ui_1"),
-      mod_eett_ui("eett_ui_1")
+      mod_eett_ui("eett_ui_1"),
+      mod_ayuda_ui("ayuda_ui_1")
     )
   )
 }
