@@ -36,7 +36,9 @@ mod_ayuda_ui <- function(id){
               ),
               tags$p(style="text-align: justify;", "En el gráfico se contabilizarán solo los eventos correspondientes a los filtros ingresados.
                      El filtro Cantidad de salidas a mostrar agrega o quita salidas al final del gráfico, 
-                     siempre manteniendo el orden descendente (la primera será la de mayor cantidad de eventos)."),
+                     siempre manteniendo el orden descendente (la primera será la de mayor cantidad de eventos).
+                     En el gráfico, el nombre de las salidas se muestran a la izquierda de las barras horizontales,
+                     identificadas de la siguiente forma: ET - NOMBRE DE SALIDA - NIVEL DE TENSIÓN."),
               tags$p(style="text-align: justify;", "Debajo de los filtros, se cuenta con el botón Descargar Informe, que permite descargar
                      un informe en formato pdf con un resumen de seis gráficos con algunas combinaciones de filtros aplicados
                      que resultan de interés: zona sur, zona norte y toda la provincia, presentando dos gráficos para cada caso (Alta y Media tensión).

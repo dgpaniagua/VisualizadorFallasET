@@ -24,6 +24,6 @@ run_app <- function(
       enableBookmarking = enableBookmarking, 
       uiPattern = uiPattern
     ), 
-    golem_opts = list(db="/mnt/persistent/fallas.db")
+    golem_opts = list(db="/mnt/persistent/fallas.db", es="/mnt/persistent/Spanish.json")
   )
 }

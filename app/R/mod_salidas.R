@@ -80,9 +80,12 @@ mod_salidas_ui <- function(id){
        ),
       
      ),
-     mainPanel({
+     mainPanel(
+       tags$div(class="h4", checked=NA, style="text-align: center;",
+                tags$b(style="text-align: center;", "Tabla de Salidas"),
+       ),
        DT::dataTableOutput(ns("table"))
-     })
+     )
      
    )
   )
@@ -142,7 +145,7 @@ mod_salidas_server <- function(id){
             res <- dbSendQuery(conn, "
                 INSERT INTO salidas(id_et, salida, tension, fecha_mant)
                 VALUES (?, ?, ?, ?);")
-            dbBind(res, list(id_et, input$salida, input$tension, as.character(as.Date(input$fecha_mant))))
+            dbBind(res, list(id_et, toupper(input$salida), input$tension, as.character(as.Date(input$fecha_mant))))
             dbClearResult(res)
             DBI::dbDisconnect(conn)
             shinyalert(
@@ -271,7 +274,7 @@ mod_salidas_server <- function(id){
                 UPDATE salidas
                 SET id_et = ?, salida = ?, tension = ?, fecha_mant = ?
                 WHERE id_salida = ?;")
-            dbBind(res, list(id_et, input$salida_modificar, input$tension_modificar, as.character(as.Date(input$fecha_mant_modificar)), input$id_modif))
+            dbBind(res, list(id_et, toupper(input$salida_modificar), input$tension_modificar, as.character(as.Date(input$fecha_mant_modificar)), input$id_modif))
             dbClearResult(res)
             DBI::dbDisconnect(conn)
             shinyalert(
@@ -369,7 +372,7 @@ mod_salidas_server <- function(id){
       names(tabla) <- c("ID", "ET", "Salida", "Tension", "Fecha Mant")
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      DT::datatable(tabla, rownames = FALSE)
+      DT::datatable(tabla, rownames = FALSE, options = list(language = jsonlite::read_json(golem::get_golem_options("es"))))
     })
  
   })

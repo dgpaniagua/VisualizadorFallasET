@@ -92,9 +92,12 @@ mod_eventos_ui <- function(id){
                    )
                  )
                ),
-               mainPanel({
+               mainPanel(
+                 tags$div(class="h4", checked=NA, style="text-align: center;",
+                          tags$b(style="text-align: center;", "Tabla de Eventos"),
+                 ),
                  DT::dataTableOutput(ns("table"))
-               })
+               )
              )
 
   )
@@ -478,7 +481,7 @@ mod_eventos_server <- function(id){
       names(tabla) <- c("ID","Fecha", "Hora", "ET", "Salida", "Tension", "Evento")
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      DT::datatable(tabla, rownames = FALSE)
+      DT::datatable(tabla, rownames = FALSE, options = list(language = jsonlite::read_json(golem::get_golem_options("es"))))
     })
  
   })

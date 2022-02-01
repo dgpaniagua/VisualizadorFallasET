@@ -38,6 +38,9 @@ mod_visual_ui <- function(id){
        ),
        
        mainPanel(
+         tags$div(class="h4", checked=NA, style="text-align: center;",
+                  tags$b(style="text-align: center;", "Gráfico de Resultados"),
+         ),
          plotOutput(ns("plot"))
        )
      )

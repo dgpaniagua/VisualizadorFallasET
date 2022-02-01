@@ -72,9 +72,12 @@ mod_eett_ui <- function(id){
                ),
                
              ),
-             mainPanel({
+             mainPanel(
+               tags$div(class="h4", checked=NA, style="text-align: center;",
+                        tags$b(style="text-align: center;", "Tabla de EETT"),
+               ),
                DT::dataTableOutput(ns("table"))
-             })
+             )
              
            )
   )
@@ -114,7 +117,7 @@ mod_eett_server <- function(id){
             res <- dbSendQuery(conn, "
                 INSERT INTO eett(et, zona)
                 VALUES (?, ?);")
-            dbBind(res, list(input$et, input$zona_ingresar))
+            dbBind(res, list(toupper(input$et), input$zona_ingresar))
             dbClearResult(res)
             DBI::dbDisconnect(conn)
             shinyalert(
@@ -201,7 +204,7 @@ mod_eett_server <- function(id){
                 UPDATE eett
                 SET et = ?, zona = ?
                 WHERE id_et = ?;")
-            dbBind(res, list(input$eett_modificar, input$zona_modificar, input$id_modif))
+            dbBind(res, list(toupper(input$eett_modificar), input$zona_modificar, input$id_modif))
             dbClearResult(res)
             DBI::dbDisconnect(conn)
             shinyalert(
@@ -297,7 +300,7 @@ mod_eett_server <- function(id){
       names(tabla) <- c("ID", "ET", "Zona")
       dbClearResult(res)
       DBI::dbDisconnect(conn)
-      DT::datatable(tabla, rownames = FALSE)
+      DT::datatable(tabla, rownames = FALSE, options = list(language = jsonlite::read_json(golem::get_golem_options("es"))))
     })
     
   })
