@@ -74,7 +74,7 @@ mod_visual_server <- function(id){
     output$report <- downloadHandler(
       filename = "Informe.pdf",
       content = function(file) {
-        report <- system.file("extdata","informe.Rmd", package = "VisualizadorFallasET")
+        report <- paste(getwd(),"/inst/extdata/informe.Rmd", sep = "")
 
         # Set up parameters to pass to Rmd document
         params <- list(n = input$daterange, top = input$top, db_path = golem::get_golem_options("db"))

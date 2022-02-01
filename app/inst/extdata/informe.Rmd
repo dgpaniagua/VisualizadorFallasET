@@ -1,5 +1,5 @@
 ---
-lang: es-ES
+#lang: es-ES
 title: "Informe de Fallas en MT y AT"
 author: "Empresa Provincial de la Energía de Santa Fe"
 date: "`r format(Sys.time(), '%d de %B de %Y')`"
