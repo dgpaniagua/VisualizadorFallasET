@@ -1,5 +1,6 @@
 ---
-output: github_document
+output: pdf_document
+# output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -15,9 +16,9 @@ knitr::opts_chunk$set(
 
 # Visualizador de Fallas de ET
 
-<!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-<!-- badges: end -->
+<!-- <!-- badges: start --> -->
+<!-- [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) -->
+<!-- <!-- badges: end --> -->
 
 Visualizador de Fallas de ET es una aplicación web Shiny para el registro y análisis de fallas que se producen en las salidas de las estaciones transformadoras de una distribuidora de energía eléctrica.
 
@@ -76,5 +77,14 @@ Se deberá ejecutar el siguiente comando. En este caso se utiliza la etiqueta --
 docker run -d -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --net epe-fallas-net -p 8080:8080 shinyproxy-epe
 ```
 
-Una vez ejecutado este comando, se puede acceder al servidor desde un explorador utilizando el puerto seleccionado. Para hacer el login deben utilizarse las credenciales configuradas en el archivo application.yml
+Una vez ejecutado este comando, se puede acceder al servidor desde un explorador utilizando el puerto seleccionado. Para hacer el login deben utilizarse las credenciales configuradas en el archivo application.yml, para este caso se tiene:
 
+url: https://localhost:8080    
+
+En caso de utilizarse desde otro dispositivo debe reemplazarse "localhost" por la IP del dispositivo donde se instaló la aplicación. Las credenciales de usuario administrador pueden consultarse en el archivo "application.yml". Los otros usuarios configurados son:
+
+Usuario 1: mantsur \\
+Password: mantsur21
+
+Usuario 2: mantnorte \\
+Password: mantnorte21
