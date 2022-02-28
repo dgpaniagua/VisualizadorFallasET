@@ -5,10 +5,10 @@ account: dpaniagua
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5272584
-bundleId: 5528683
+bundleId: 5626637
 url: https://dpaniagua.shinyapps.io/VisualizadorFallasET/
-when: 1643676950.91367
-lastSyncTime: 1643676950.91367
+when: 1646081563.76604
+lastSyncTime: 1646081563.76604
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: .dockerignore|Dockerfile
